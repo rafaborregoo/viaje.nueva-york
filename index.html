@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0e1a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Planificador de viaje a Nueva York — Rafa & Noemi 🗽" />
+  <title>🗽 NY Trip — Rafa & Noemi</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ═══════════════ TOP HEADER ═══════════════ -->
+  <header class="top-header">
+    <div class="logo">
+      🗽 NY Trip
+      <span>Rafa &amp; Noemi · Abr–May 2026</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="openPdfModal()" title="Guardar PDF">📄</button>
+    </div>
+  </header>
+
+  <!-- ═══════════════ HOME VIEW ════════════════ -->
+  <section id="view-home" class="view active">
+
+    <!-- Hero + Countdown -->
+    <div class="hero">
+      <div class="hero-eyebrow">✈️ Tu próxima aventura</div>
+      <div class="hero-title">Nueva York</div>
+      <div class="hero-sub">
+        Rafa <span class="hearts">❤️</span> Noemi · 8 días soñados
+      </div>
+
+      <!-- Countdown -->
+      <div id="countdown-grid" class="countdown-grid"></div>
+      <div id="countdown-done" class="countdown-done" style="display:none">
+        🗽 ¡El viaje ha comenzado! ¡Disfrutadlo al máximo!
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-strip">
+      <div class="stat-chip"><span class="icon">📅</span> 28 Apr – 5 May</div>
+      <div class="stat-chip"><span class="icon">🌆</span> 8 Días</div>
+      <div class="stat-chip"><span class="icon">🎭</span> Broadway</div>
+      <div class="stat-chip"><span class="icon">🗽</span> Nueva York</div>
+      <div class="stat-chip"><span class="icon">🎂</span> Cumple Noemi</div>
+    </div>
+
+    <!-- Next Event Card -->
+    <div class="section-heading">
+      <h2>Próximo evento</h2>
+    </div>
+    <div class="next-card" id="next-event-card"></div>
+
+    <!-- Day Quick Strip -->
+    <div class="section-heading">
+      <h2>Días del viaje</h2>
+      <button class="link-btn" onclick="switchView('days')">Ver todos →</button>
+    </div>
+    <div class="day-strip" id="home-day-strip"></div>
+
+    <!-- Quick tip -->
+    <div class="section-heading"><h2>💡 Tip rápido</h2></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🚇</div>
+        <div>
+          <div class="card-title">Metro sin abono físico</div>
+          <div class="card-sub">Paga con contactless directamente</div>
+        </div>
+      </div>
+      <div style="font-size:0.8rem;color:var(--text2);line-height:1.6">
+        Solo <strong style="color:var(--gold)">3 $/viaje</strong> con tarjeta contactless o móvil.
+        El sistema aplica automáticamente un <strong style="color:var(--gold)">tope de 35 $/persona en 7 días</strong> —
+        después, los viajes son <strong style="color:var(--green)">GRATIS</strong>.
+        Usad siempre el mismo método de pago para acumular el tope.
+      </div>
+    </div>
+
+    <div style="height:8px"></div>
+  </section>
+
+  <!-- ═══════════════ DAYS VIEW ════════════════ -->
+  <section id="view-days" class="view">
+
+    <!-- Day selector sticky bar -->
+    <div class="day-selector-bar">
+      <div class="day-selector-scroll" id="day-pills-bar"></div>
+    </div>
+
+    <!-- Day detail content -->
+    <div id="day-detail-container"></div>
+
+  </section>
+
+  <!-- ═══════════════ MAP VIEW ═════════════════ -->
+  <section id="view-map" class="view">
+
+    <div class="map-filter-bar">
+      <p>Filtra por día para ver solo esos lugares</p>
+      <div class="map-filter-scroll" id="map-filter-bar"></div>
+    </div>
+
+    <div id="map-container"></div>
+
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#2196f3"></div> Monumento</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ff5722"></div> Restaurante</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4caf50"></div> Parque</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#9c27b0"></div> Bar/Rooftop</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#6c757d"></div> Transporte</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f0a500"></div> Hotel</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#795548"></div> Museo</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e91e63"></div> Tienda</div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════ INFO VIEW ════════════════ -->
+  <section id="view-info" class="view">
+
+    <!-- Checklist -->
+    <div class="section-heading">
+      <h2>✅ Checklist pre-viaje</h2>
+    </div>
+    <div class="card">
+      <div id="checklist-container"></div>
+    </div>
+
+    <!-- Transport -->
+    <div class="section-heading">
+      <h2>🚇 Transporte en NY</h2>
+    </div>
+    <div class="px-16" id="transport-container"></div>
+
+    <!-- Info útil -->
+    <div class="section-heading"><h2>⚠️ Info importante</h2></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(33,150,243,0.15)">✈️</div>
+        <div>
+          <div class="card-title">Vuelo de ida</div>
+          <div class="card-sub">28 Abr · Fuengirola → Casablanca → JFK</div>
+        </div>
+      </div>
+      <div style="font-size:0.8rem;color:var(--text2);line-height:1.6;border-top:1px solid var(--border);padding-top:10px;margin-top:4px">
+        🚂 Cercanías Fuengirola <strong>11:20</strong> ·
+        🛫 Casablanca T2 <strong>15:30</strong> (14:30 local) ·
+        🗽 Llegada JFK <strong>18:45</strong><br/>
+        AirTrain JFK → Jamaica Station → Metro → Long Island City
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(233,30,99,0.15)">🛫</div>
+        <div>
+          <div class="card-title">Vuelo de vuelta</div>
+          <div class="card-sub">5 May · JFK T1 → Casablanca</div>
+        </div>
+      </div>
+      <div style="font-size:0.8rem;color:var(--text2);line-height:1.6;border-top:1px solid var(--border);padding-top:10px;margin-top:4px">
+        🏨 Salida hotel <strong>16:15–16:30</strong> ·
+        🚂 Metro → Jamaica Station ·
+        ✈️ AirTrain JFK T1 ·
+        🛂 Llegada aeropuerto <strong>17:45–18:00</strong> ·
+        🛫 Vuelo <strong>20:45</strong>
+      </div>
+    </div>
+
+    <!-- Apps -->
+    <div class="section-heading"><h2>📱 Apps recomendadas</h2></div>
+    <div class="card">
+      <div id="apps-container"></div>
+    </div>
+
+    <!-- Holafly info -->
+    <div class="section-heading"><h2>📶 Internet — Holafly</h2></div>
+    <div class="card">
+      <div style="font-size:0.85rem;color:var(--text2);line-height:1.7">
+        ✅ eSIM ya abonada con <strong style="color:var(--gold)">datos ilimitados</strong>.<br/>
+        📌 Activar en el aeropuerto siguiendo los pasos de Holafly.<br/>
+        💡 Conectarse a la eSIM nada más llegar al JFK antes de necesitar GPS o datos.
+      </div>
+    </div>
+
+    <div style="height:8px"></div>
+  </section>
+
+</div><!-- /app -->
+
+<!-- ═══════════════ BOTTOM NAVIGATION ══════════════ -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-view="home">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">Inicio</span>
+  </button>
+  <button class="nav-item" data-view="days">
+    <span class="nav-icon">📅</span>
+    <span class="nav-label">Días</span>
+  </button>
+  <button class="nav-item" data-view="map">
+    <span class="nav-icon">🗺️</span>
+    <span class="nav-label">Mapa</span>
+  </button>
+  <button class="nav-item" data-view="info">
+    <span class="nav-icon">✅</span>
+    <span class="nav-label">Info</span>
+  </button>
+</nav>
+
+<!-- ═══════════════ PDF MODAL ══════════════════════ -->
+<div class="modal-overlay" id="pdf-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📄 Guardar como PDF</div>
+    <div class="modal-desc">
+      Genera un PDF completo del itinerario con todos los días del viaje.
+      Puedes guardarlo en tu móvil para consultarlo sin conexión.
+    </div>
+    <button class="btn-primary" onclick="printItinerary()">
+      🖨️ Guardar / Imprimir PDF
+    </button>
+    <button class="btn-secondary" onclick="closePdfModal()">
+      Cancelar
+    </button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="app-toast"></div>
+
+<!-- ═══════════════ SCRIPTS ═════════════════════════ -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/data.js"></script>
+<script src="js/maps.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

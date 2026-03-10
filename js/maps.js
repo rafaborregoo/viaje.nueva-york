@@ -1,0 +1,136 @@
+// ============================================================
+//  MAPS — Leaflet.js + OpenStreetMap (sin API key 🎉)
+// ============================================================
+
+const PLACE_COLORS = {
+  transport:    '#6c757d',
+  hotel:        '#f0a500',
+  landmark:     '#2196f3',
+  park:         '#4caf50',
+  restaurant:   '#ff5722',
+  bar:          '#9c27b0',
+  shop:         '#e91e63',
+  museum:       '#795548',
+  neighborhood: '#00bcd4',
+  theater:      '#ff9800'
+};
+
+const PLACE_ICONS = {
+  transport:    '🚇',
+  hotel:        '🏨',
+  landmark:     '🏛️',
+  park:         '🌳',
+  restaurant:   '🍽️',
+  bar:          '🍸',
+  shop:         '🛍️',
+  museum:       '🏛️',
+  neighborhood: '📍',
+  theater:      '🎭'
+};
+
+let mapInstance = null;
+let allMarkers = [];
+let currentDayFilter = 'all';
+
+function initMap() {
+  if (mapInstance) return;
+
+  mapInstance = L.map('map-container', {
+    center: [40.7580, -73.9855],
+    zoom: 12,
+    zoomControl: true,
+    attributionControl: false
+  });
+
+  // Dark-style tile layer (CartoDB DarkMatter)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd',
+    maxZoom: 20
+  }).addTo(mapInstance);
+
+  // Attribution pequeño
+  L.control.attribution({
+    prefix: '<a href="https://leafletjs.com" style="color:#f0a500">Leaflet</a> | © <a href="https://carto.com" style="color:#f0a500">CARTO</a>'
+  }).addTo(mapInstance);
+
+  loadAllMarkers();
+}
+
+function makeMarkerIcon(type, color) {
+  const emoji = PLACE_ICONS[type] || '📍';
+  return L.divIcon({
+    html: `<div style="
+      background:${color};
+      width:32px;height:32px;
+      border-radius:50% 50% 50% 0;
+      transform:rotate(-45deg);
+      border:2px solid rgba(255,255,255,0.3);
+      box-shadow:0 3px 12px rgba(0,0,0,0.5);
+      display:flex;align-items:center;justify-content:center;
+    "><span style="transform:rotate(45deg);font-size:13px;line-height:1">${emoji}</span></div>`,
+    className: '',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -36]
+  });
+}
+
+function loadAllMarkers() {
+  allMarkers.forEach(m => m.marker.remove());
+  allMarkers = [];
+
+  TRIP.days.forEach(day => {
+    day.places.forEach(place => {
+      const color = PLACE_COLORS[place.type] || '#f0a500';
+      const icon = makeMarkerIcon(place.type, color);
+
+      const marker = L.marker(place.coords, { icon }).addTo(mapInstance);
+
+      const popupHtml = `
+        <div class="popup-name">${place.name}</div>
+        <div class="popup-day" style="color:${day.color}">${day.emoji} ${day.label} — ${day.title}</div>
+        <a class="popup-link" href="${place.gmaps}" target="_blank" rel="noopener">
+          🗺️ Abrir en Google Maps
+        </a>
+      `;
+
+      marker.bindPopup(popupHtml, { maxWidth: 220 });
+
+      allMarkers.push({ marker, dayId: day.id, type: place.type });
+    });
+  });
+}
+
+function filterMapByDay(dayId) {
+  currentDayFilter = dayId;
+
+  allMarkers.forEach(({ marker, dayId: mDayId }) => {
+    if (dayId === 'all' || mDayId === dayId) {
+      marker.addTo(mapInstance);
+    } else {
+      marker.remove();
+    }
+  });
+
+  // Fly to day area
+  if (dayId !== 'all') {
+    const day = TRIP.days.find(d => d.id === dayId);
+    if (day && day.places.length > 0) {
+      const coords = day.places.map(p => p.coords);
+      if (coords.length === 1) {
+        mapInstance.flyTo(coords[0], 15, { duration: 1 });
+      } else {
+        const bounds = L.latLngBounds(coords);
+        mapInstance.flyToBounds(bounds, { padding: [40, 40], duration: 1 });
+      }
+    }
+  } else {
+    mapInstance.flyTo([40.7445, -73.9485], 12, { duration: 1 });
+  }
+}
+
+function resizeMap() {
+  if (mapInstance) {
+    setTimeout(() => mapInstance.invalidateSize(), 100);
+  }
+}
