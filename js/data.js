@@ -4,10 +4,10 @@
 
 const TRIP = {
   couple: { p1: 'Rafa', p2: 'Noemi' },
-  departureDate: '2026-04-28T11:00:00',
-  returnDate: '2026-05-05T20:45:00',
-  flightOut: { from: 'Fuengirola/Casablanca', to: 'JFK', departure: '2026-04-28', arrival: '18:45 NY' },
-  flightReturn: { from: 'JFK T1', to: 'Casablanca', departure: '20:45', date: '2026-05-05' },
+  departureDate: '2026-04-18T11:00:00',
+  returnDate: '2026-04-25T20:45:00',
+  flightOut: { from: 'Fuengirola/Casablanca', to: 'JFK', departure: '2026-04-18', arrival: '18:45 NY' },
+  flightReturn: { from: 'JFK T1', to: 'Casablanca', departure: '20:45', date: '2026-04-25' },
   hotel: { name: 'Hotel Long Island City', area: 'Long Island City, Queens', coords: [40.7442, -73.9485] },
 
   // ─── CHECKLIST ────────────────────────────────────────────
@@ -49,9 +49,9 @@ const TRIP = {
   days: [
     {
       id: 1,
-      date: '2026-04-28',
+      date: '2026-04-18',
       label: 'Día 1',
-      dayName: 'Martes',
+      dayName: 'Sábado',
       title: 'Viaje de Ida',
       emoji: '✈️',
       color: '#6c757d',
@@ -72,9 +72,9 @@ const TRIP = {
     },
     {
       id: 2,
-      date: '2026-04-29',
+      date: '2026-04-19',
       label: 'Día 2',
-      dayName: 'Miércoles',
+      dayName: 'Domingo',
       title: 'Midtown & Cumpleaños Noemi',
       emoji: '🎂',
       color: '#e91e63',
@@ -103,9 +103,9 @@ const TRIP = {
     },
     {
       id: 3,
-      date: '2026-04-30',
+      date: '2026-04-20',
       label: 'Día 3',
-      dayName: 'Jueves',
+      dayName: 'Lunes',
       title: 'SoHo · Nolita · Little Italy · Chinatown',
       emoji: '🛍️',
       color: '#9c27b0',
@@ -130,9 +130,9 @@ const TRIP = {
     },
     {
       id: 4,
-      date: '2026-05-01',
+      date: '2026-04-21',
       label: 'Día 4',
-      dayName: 'Viernes',
+      dayName: 'Martes',
       title: 'Central Park + The Met',
       emoji: '🌳',
       color: '#4caf50',
@@ -155,9 +155,9 @@ const TRIP = {
     },
     {
       id: 5,
-      date: '2026-05-02',
+      date: '2026-04-22',
       label: 'Día 5',
-      dayName: 'Sábado',
+      dayName: 'Miércoles',
       title: 'Downtown + Estatua + Brooklyn',
       emoji: '🌉',
       color: '#2196f3',
@@ -182,9 +182,9 @@ const TRIP = {
     },
     {
       id: 6,
-      date: '2026-05-03',
+      date: '2026-04-23',
       label: 'Día 6',
-      dayName: 'Domingo',
+      dayName: 'Jueves',
       title: 'Vivir la Ciudad + The Lion King 🎭',
       emoji: '🎭',
       color: '#ff9800',
@@ -207,9 +207,9 @@ const TRIP = {
     },
     {
       id: 7,
-      date: '2026-05-04',
+      date: '2026-04-24',
       label: 'Día 7',
-      dayName: 'Lunes',
+      dayName: 'Viernes',
       title: 'Museo de Historia Natural + Tarde Libre',
       emoji: '🦕',
       color: '#795548',
@@ -228,9 +228,9 @@ const TRIP = {
     },
     {
       id: 8,
-      date: '2026-05-05',
+      date: '2026-04-25',
       label: 'Día 8',
-      dayName: 'Martes',
+      dayName: 'Sábado',
       title: 'Viaje de Vuelta',
       emoji: '🏠',
       color: '#607d8b',

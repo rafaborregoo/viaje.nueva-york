@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#fdf8f5" />
+  <meta name="robots" content="noindex" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="description" content="Pagina no encontrada del viaje a Nueva York de Rafa y Noemi." />
+  <title>404 | NY Trip</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    body {
+      padding-bottom: 0;
+    }
+
+    .error-shell {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .error-card {
+      width: min(100%, 460px);
+      background: linear-gradient(145deg, #fff0f8 0%, #fdf5ff 40%, #fff8ed 100%);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    .error-code {
+      font-family: var(--font-head);
+      font-size: clamp(4rem, 18vw, 6rem);
+      line-height: 0.9;
+      color: var(--pink);
+      margin-bottom: 12px;
+    }
+
+    .error-title {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .error-copy {
+      color: var(--text2);
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .error-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .error-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 148px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .error-link.primary {
+      color: #fff;
+      background: linear-gradient(90deg, var(--pink), var(--lavender));
+      box-shadow: var(--shadow-sm);
+    }
+
+    .error-link.secondary {
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+
+    .error-link:hover {
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <main class="error-shell">
+    <section class="error-card">
+      <div class="error-code">404</div>
+      <h1 class="error-title">Esta pagina no existe</h1>
+      <p class="error-copy">
+        La ruta que has abierto no forma parte de la app del viaje.
+        Vuelve al inicio para seguir viendo el itinerario de Nueva York.
+      </p>
+      <div class="error-actions">
+        <a class="error-link primary" href="/">Volver al inicio</a>
+        <a class="error-link secondary" href="/index.html">Abrir index.html</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

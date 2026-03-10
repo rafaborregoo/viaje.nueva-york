@@ -431,7 +431,7 @@ function printItinerary() {
   const container = document.getElementById('day-detail-container');
   const originalContent = container.innerHTML;
 
-  let allDaysHtml = '<div class="print-header"><h1>🗽 Nueva York — Rafa & Noemi</h1><p>28 Abril – 5 Mayo 2026</p></div>';
+  let allDaysHtml = '<div class="print-header"><h1>🗽 Nueva York — Rafa & Noemi</h1><p>18 Abril – 25 Abril 2026</p></div>';
 
   TRIP.days.forEach(day => {
     const note = notesState[`day_${day.id}`] || '';
