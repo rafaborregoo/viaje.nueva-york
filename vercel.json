@@ -3,7 +3,7 @@
   "name": "ny-trip-rafa-noemi",
   "builds": [
     {
-      "src": "index.html",
+      "src": "**/*",
       "use": "@vercel/static"
     }
   ],
@@ -11,14 +11,6 @@
     {
       "src": "/(.*)",
       "dest": "/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
-      ]
     }
   ]
 }
