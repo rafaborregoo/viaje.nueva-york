@@ -1,30 +1,30 @@
 // ============================================================
-//  MAPS — Leaflet.js + OpenStreetMap (sin API key 🎉)
+//  MAPS — Leaflet.js + OpenStreetMap · Princess & Mystic Theme
 // ============================================================
 
 const PLACE_COLORS = {
-  transport:    '#6c757d',
-  hotel:        '#f0a500',
-  landmark:     '#2196f3',
-  park:         '#4caf50',
-  restaurant:   '#ff5722',
-  bar:          '#9c27b0',
-  shop:         '#e91e63',
-  museum:       '#795548',
-  neighborhood: '#00bcd4',
-  theater:      '#ff9800'
+  transport:    '#5b9ea0',
+  hotel:        '#c9892e',
+  landmark:     '#c96fa0',
+  park:         '#4caf82',
+  restaurant:   '#e87a5a',
+  bar:          '#9b7fc7',
+  shop:         '#d4789c',
+  museum:       '#7b8c6f',
+  neighborhood: '#b07fa8',
+  theater:      '#c96fa0'
 };
 
 const PLACE_ICONS = {
   transport:    '🚇',
   hotel:        '🏨',
-  landmark:     '🏛️',
-  park:         '🌳',
+  landmark:     '🌸',
+  park:         '🌿',
   restaurant:   '🍽️',
-  bar:          '🍸',
-  shop:         '🛍️',
+  bar:          '🔮',
+  shop:         '✨',
   museum:       '🏛️',
-  neighborhood: '📍',
+  neighborhood: '💫',
   theater:      '🎭'
 };
 
@@ -36,42 +36,41 @@ function initMap() {
   if (mapInstance) return;
 
   mapInstance = L.map('map-container', {
-    center: [40.7580, -73.9855],
+    center: [40.7445, -73.9485],
     zoom: 12,
     zoomControl: true,
     attributionControl: false
   });
 
-  // Dark-style tile layer (CartoDB DarkMatter)
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  // Warm/light tile layer — CartoDB Voyager (bright, warm)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
     subdomains: 'abcd',
     maxZoom: 20
   }).addTo(mapInstance);
 
-  // Attribution pequeño
   L.control.attribution({
-    prefix: '<a href="https://leafletjs.com" style="color:#f0a500">Leaflet</a> | © <a href="https://carto.com" style="color:#f0a500">CARTO</a>'
+    prefix: '<a href="https://leafletjs.com" style="color:#c96fa0">Leaflet</a> | © <a href="https://carto.com" style="color:#c96fa0">CARTO</a>'
   }).addTo(mapInstance);
 
   loadAllMarkers();
 }
 
 function makeMarkerIcon(type, color) {
-  const emoji = PLACE_ICONS[type] || '📍';
+  const emoji = PLACE_ICONS[type] || '💫';
   return L.divIcon({
     html: `<div style="
       background:${color};
-      width:32px;height:32px;
+      width:34px;height:34px;
       border-radius:50% 50% 50% 0;
       transform:rotate(-45deg);
-      border:2px solid rgba(255,255,255,0.3);
-      box-shadow:0 3px 12px rgba(0,0,0,0.5);
+      border:2.5px solid rgba(255,255,255,0.85);
+      box-shadow:0 3px 12px rgba(0,0,0,0.18);
       display:flex;align-items:center;justify-content:center;
-    "><span style="transform:rotate(45deg);font-size:13px;line-height:1">${emoji}</span></div>`,
+    "><span style="transform:rotate(45deg);font-size:14px;line-height:1">${emoji}</span></div>`,
     className: '',
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-    popupAnchor: [0, -36]
+    iconSize: [34, 34],
+    iconAnchor: [17, 34],
+    popupAnchor: [0, -38]
   });
 }
 
@@ -81,21 +80,19 @@ function loadAllMarkers() {
 
   TRIP.days.forEach(day => {
     day.places.forEach(place => {
-      const color = PLACE_COLORS[place.type] || '#f0a500';
+      const color = PLACE_COLORS[place.type] || '#c96fa0';
       const icon = makeMarkerIcon(place.type, color);
-
       const marker = L.marker(place.coords, { icon }).addTo(mapInstance);
 
       const popupHtml = `
         <div class="popup-name">${place.name}</div>
-        <div class="popup-day" style="color:${day.color}">${day.emoji} ${day.label} — ${day.title}</div>
+        <div class="popup-day">${day.emoji} ${day.label} — ${day.title}</div>
         <a class="popup-link" href="${place.gmaps}" target="_blank" rel="noopener">
           🗺️ Abrir en Google Maps
         </a>
       `;
 
       marker.bindPopup(popupHtml, { maxWidth: 220 });
-
       allMarkers.push({ marker, dayId: day.id, type: place.type });
     });
   });
@@ -112,7 +109,6 @@ function filterMapByDay(dayId) {
     }
   });
 
-  // Fly to day area
   if (dayId !== 'all') {
     const day = TRIP.days.find(d => d.id === dayId);
     if (day && day.places.length > 0) {
@@ -130,7 +126,5 @@ function filterMapByDay(dayId) {
 }
 
 function resizeMap() {
-  if (mapInstance) {
-    setTimeout(() => mapInstance.invalidateSize(), 100);
-  }
+  if (mapInstance) setTimeout(() => mapInstance.invalidateSize(), 100);
 }

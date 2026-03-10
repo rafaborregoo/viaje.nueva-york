@@ -98,9 +98,9 @@ function startCountdown() {
       { n: minutes, l: 'Min' },
       { n: seconds, l: 'Seg' }
     ].map(({ n, l }) => `
-      <div class="countdown-cell">
-        <div class="num">${String(n).padStart(2,'0')}</div>
-        <div class="lbl">${l}</div>
+      <div class="countdown-box">
+        <div class="countdown-num">${String(n).padStart(2,'0')}</div>
+        <div class="countdown-lbl">${l}</div>
       </div>
     `).join('');
   }
@@ -131,21 +131,23 @@ function renderHome() {
   const nc = document.getElementById('next-event-card');
   if (nc && nextDay) {
     nc.innerHTML = `
-      <div class="next-label">Próximo evento</div>
-      <div class="next-title">${nextEvent.icon} ${nextEvent.title}</div>
-      <div class="next-desc">${nextDay.label} · ${nextDay.dayName} ${nextDay.date.slice(5).replace('-','/')} · ${nextEvent.time}</div>
-      <div class="next-desc" style="margin-top:4px">${nextEvent.desc}</div>
+      <div class="next-card-label">✨ Próximo momento especial</div>
+      <div class="next-card-title">${nextEvent.icon} ${nextEvent.title}</div>
+      <div class="next-card-time">${nextDay.label} · ${nextDay.dayName} · ${nextEvent.time}</div>
+      <div class="next-card-time" style="margin-top:4px;font-style:italic">${nextEvent.desc}</div>
     `;
+  } else if (nc) {
+    nc.innerHTML = '<div class="next-card-empty">🌸 El viaje ya comenzó. ¡Disfrutadlo!</div>';
   }
 
   // Day strip on home
   const strip = document.getElementById('home-day-strip');
   if (!strip) return;
   strip.innerHTML = TRIP.days.map(d => `
-    <div class="day-chip ${d.special ? 'special' : ''}" onclick="goToDay(${d.id})">
-      <span class="d-emoji">${d.emoji}</span>
-      <span class="d-num">${d.label}</span>
-      <span class="d-date">${formatShortDate(d.date)}</span>
+    <div class="day-mini-card ${d.special ? 'special' : ''}" onclick="goToDay(${d.id})">
+      <div class="day-mini-emoji">${d.emoji}</div>
+      <div class="day-mini-label">${d.label}</div>
+      <div class="day-mini-title">${formatShortDate(d.date)}</div>
     </div>
   `).join('');
 }
@@ -206,11 +208,15 @@ function renderDayDetail(dayId) {
   container.innerHTML = `
     <div class="day-detail">
       <!-- Banner -->
-      <div class="day-banner" style="background:${bannerBg}; border-color:${day.color}44; color:#fff;">
-        ${day.special ? `<div class="special-badge">${day.specialText}</div>` : ''}
-        <span class="day-banner-emoji">${day.emoji}</span>
-        <div class="day-banner-label" style="color:${day.color}">${day.label} · ${day.dayName} ${formatLongDate(day.date)}</div>
-        <div class="day-banner-title">${day.title}</div>
+      <div class="day-banner ${day.special ? 'day-banner-special' : ''}">
+        ${day.special ? `<div class="day-banner-special-tag">🎉 ${day.specialText}</div>` : ''}
+        <div class="day-banner-header">
+          <div class="day-banner-emoji">${day.emoji}</div>
+          <div>
+            <div class="day-banner-label">${day.label} · ${day.dayName} · ${formatLongDate(day.date)}</div>
+            <div class="day-banner-title">${day.title}</div>
+          </div>
+        </div>
         <div class="day-banner-desc">${day.description}</div>
       </div>
 
@@ -262,9 +268,9 @@ function renderDayDetail(dayId) {
 }
 
 const PLACE_ICONS_INLINE = {
-  transport: '🚇', hotel: '🏨', landmark: '🏛️', park: '🌳',
-  restaurant: '🍽️', bar: '🍸', shop: '🛍️', museum: '🏛️',
-  neighborhood: '📍', theater: '🎭'
+  transport: '🚇', hotel: '🏨', landmark: '🌸', park: '🌿',
+  restaurant: '🍽️', bar: '🔮', shop: '✨', museum: '🏛️',
+  neighborhood: '💫', theater: '🎭'
 };
 
 function saveNoteDay(dayId, value) {
@@ -309,7 +315,7 @@ function renderChecklist() {
   }));
 
   const cats = [...new Set(items.map(i => i.cat))];
-  const catLabels = { documentos: '🪪 Documentos', equipaje: '🧳 Equipaje', internet: '📱 Internet & Apps', extras: '⭐ Extras' };
+  const catLabels = { documentos: '🌸 Documentos', equipaje: '✨ Equipaje', internet: '🔮 Internet & Apps', extras: '💫 Extras' };
 
   const doneCount = items.filter(i => i.done).length;
   const pct = Math.round((doneCount / items.length) * 100);
@@ -348,7 +354,7 @@ function toggleCheck(id) {
   checklistState[id] = !item.done;
   saveChecklist();
   renderChecklist();
-  showToast(checklistState[id] ? '✓ Marcado' : 'Desmarcado');
+  showToast(checklistState[id] ? '🌸 ¡Listo!' : 'Desmarcado');
 }
 
 function renderTransport() {
