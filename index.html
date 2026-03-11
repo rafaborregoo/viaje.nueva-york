@@ -9,6 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="description" content="Planificador de viaje a Nueva York — Rafa & Noemi 🌸" />
   <title>🌸 NY Trip — Rafa & Noemi</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,6 +33,7 @@
       <span>Rafa &amp; Noemi · Abr 2026</span>
     </div>
     <div class="header-actions">
+      <button class="btn-icon" id="auth-logout-btn" onclick="signOutTripApp()" title="Cerrar sesión" style="display:none">⇠</button>
       <button class="btn-icon" onclick="openPdfModal()" title="Guardar PDF">🗂️</button>
     </div>
   </header>
@@ -117,9 +119,24 @@
     <div class="map-filter-bar">
       <p>🌸 Filtra por día para ver solo esos lugares</p>
       <div class="map-filter-scroll" id="map-filter-bar"></div>
+      <div class="map-filter-scroll map-filter-scroll-secondary" id="map-type-bar"></div>
+    </div>
+
+    <div class="map-tools">
+      <button class="map-tool-btn" onclick="focusMapOnVisible()">Ajustar mapa</button>
+      <button class="map-tool-btn" onclick="focusMapOnHotel()">Hotel</button>
+      <div class="map-tools-note" id="map-results-summary">Cargando lugares...</div>
     </div>
 
     <div id="map-container"></div>
+
+    <div class="map-places-panel">
+      <div class="map-places-head">
+        <h3>Lugares visibles</h3>
+        <span id="map-places-count">0</span>
+      </div>
+      <div class="map-places-list" id="map-places-list"></div>
+    </div>
 
     <div class="map-legend">
       <div class="legend-item"><div class="legend-dot" style="background:#c96fa0"></div> Monumento</div>
@@ -144,6 +161,60 @@
     <div class="card">
       <div id="checklist-container"></div>
     </div>
+
+    <div class="section-heading">
+      <h2>🗂️ Documentos y reservas</h2>
+    </div>
+    <div class="card">
+      <div class="personal-intro">
+        Guarda aqui pasaportes, seguro, hotel, reservas o cualquier nota propia.
+        Tras iniciar sesión, todo se sincroniza con Supabase entre vuestros dispositivos.
+      </div>
+
+      <form id="personal-item-form" class="personal-form">
+        <div class="personal-grid">
+          <label class="personal-field">
+            <span>Tipo</span>
+            <select id="personal-item-kind" required>
+              <option value="documento">Documento</option>
+              <option value="pasaporte">Pasaporte</option>
+              <option value="seguro">Seguro</option>
+              <option value="hotel">Hotel</option>
+              <option value="vuelo">Vuelo</option>
+              <option value="reserva">Reserva</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+
+          <label class="personal-field">
+            <span>Titulo</span>
+            <input id="personal-item-title" type="text" placeholder="Ej. Hotel, pasaporte Rafa, seguro..." required />
+          </label>
+        </div>
+
+        <label class="personal-field">
+          <span>Enlace opcional</span>
+          <input id="personal-item-link" type="url" placeholder="https://drive.google.com/... o web de la reserva" />
+        </label>
+
+        <label class="personal-field">
+          <span>Notas</span>
+          <textarea id="personal-item-notes" rows="3" placeholder="Numero de reserva, direccion, telefono, observaciones..."></textarea>
+        </label>
+
+        <label class="personal-field">
+          <span>Archivos</span>
+          <input id="personal-item-files" type="file" multiple />
+        </label>
+
+        <div class="personal-actions">
+          <button class="btn-primary" type="submit">Guardar item</button>
+          <button class="btn-secondary" type="button" onclick="resetPersonalForm()">Limpiar</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="personal-list" id="personal-items-list"></div>
 
     <!-- Transport -->
     <div class="section-heading">
@@ -207,6 +278,34 @@
 
 </div><!-- /app -->
 
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-eyebrow">Acceso privado</div>
+    <h2 class="auth-title">Nora App</h2>
+    <p class="auth-copy">
+      Entra con vuestro email y contraseña para sincronizar documentos, reservas y notas entre dispositivos.
+    </p>
+    <form class="auth-form" id="auth-form">
+      <label class="auth-field">
+        <span>Email</span>
+        <input id="auth-email" type="email" autocomplete="email" placeholder="vosotros@email.com" required />
+      </label>
+      <label class="auth-field">
+        <span>Contraseña</span>
+        <input id="auth-password" type="password" autocomplete="current-password" placeholder="Tu contraseña" required />
+      </label>
+      <div class="auth-actions">
+        <button class="btn-primary auth-submit" type="submit" data-auth-mode="signin">Entrar</button>
+        <button class="btn-secondary auth-submit auth-submit-secondary" type="submit" data-auth-mode="signup">Crear cuenta</button>
+      </div>
+      <div class="auth-error" id="auth-error"></div>
+      <div class="auth-help">
+        Solo se aceptan los correos de Rafa y Noemi. Si todavia no existe la cuenta, usa "Crear cuenta" y define vuestra contraseÃ±a aqui mismo.
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- ═══════════════ BOTTOM NAVIGATION ══════════════ -->
 <nav class="bottom-nav">
   <button class="nav-item active" data-view="home">
@@ -256,6 +355,7 @@
 
 <!-- ═══════════════ SCRIPTS ═════════════════════════ -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/maps.js"></script>
 <script src="js/app.js"></script>
